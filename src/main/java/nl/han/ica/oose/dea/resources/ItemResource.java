@@ -1,5 +1,7 @@
 package nl.han.ica.oose.dea.resources;
 
+import jakarta.inject.Inject;
+import nl.han.ica.oose.dea.services.HardCodedItemService;
 import nl.han.ica.oose.dea.services.ItemService;
 import nl.han.ica.oose.dea.services.dto.ItemDTO;
 
@@ -10,13 +12,13 @@ import jakarta.ws.rs.core.UriBuilder;
 
 @Path("/items")
 public class ItemResource {
-
     private ItemService itemService;
 
-    public ItemResource() {
-        this.itemService = new ItemService();
+    @Inject
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
     }
-
+//    private HardCodedItemService itemService;
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getTextItems() {
@@ -35,7 +37,7 @@ public class ItemResource {
         itemService.addItem(itemDTO);
 
         return Response.created(
-            UriBuilder.fromPath("items/{id}").build(itemDTO.getId())
+                UriBuilder.fromPath("items/{id}").build(itemDTO.getId())
         ).build();
     }
 
@@ -52,5 +54,10 @@ public class ItemResource {
     public Response deleteItem(@PathParam("id") int id) {
         itemService.deleteItem(id);
         return Response.ok().build();
+    }
+
+    @Inject
+    public void setItemService(HardCodedItemService itemService) {
+        this.itemService = itemService;
     }
 }
